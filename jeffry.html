@@ -1,0 +1,1739 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Amazon Corporate HQ & Jeff's Underwater Command Dome - Ultimate Edition</title>
+    <style>
+        /* =========================================================================
+           1. CSS MASTER & PALETTE DESIGN
+           ========================================================================= */
+        :root {
+            --amazon-orange: #ff9900;
+            --amazon-dark: #0f171e;
+            --amazon-bg: #070b11;
+            --amazon-border: #1f3044;
+            --text-main: #ffffff;
+            --text-sub: #8ea2b9;
+            --neon-blue: #00e5ff;
+            --neon-green: #00ffaa;
+            --neon-magenta: #e040fb;
+            --danger-red: #ff4081;
+            --surface-panel: #132235;
+            --surface-inner: #0a131c;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        body {
+            display: flex;
+            background-color: var(--amazon-bg);
+            color: var(--text-main);
+            height: 100vh;
+            width: 100vw;
+            overflow: hidden; /* ป้องกันแถบ Scrollbar นอกโครงสร้างเว็บ */
+            user-select: none;
+        }
+
+        /* =========================================================================
+           2. SIDEBAR LEFT: INSTRUCTIONS & EMPLOYEES
+           ========================================================================= */
+        .sidebar-left {
+            width: 340px;
+            background-color: var(--amazon-dark);
+            border-right: 1px solid var(--amazon-border);
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            z-index: 10;
+            box-shadow: 5px 0 30px rgba(0,0,0,0.6);
+            transition: width 0.3s ease, padding 0.3s ease, border-color 0.3s ease;
+        }
+
+        .sidebar-left.collapsed {
+            width: 0;
+            padding: 24px 0;
+            border-right-color: transparent;
+            overflow: hidden;
+        }
+
+        /* ปุ่มพับ/ขยายแผงด้านข้าง */
+        .sidebar-toggle-btn {
+            position: fixed;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 24px;
+            height: 64px;
+            background: var(--amazon-dark);
+            border: 1px solid var(--amazon-border);
+            color: var(--amazon-orange);
+            font-size: 16px;
+            font-weight: 900;
+            line-height: 1;
+            cursor: pointer;
+            z-index: 60;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: left 0.3s ease, right 0.3s ease, background 0.2s ease, color 0.2s ease;
+            box-shadow: 0 6px 18px rgba(0,0,0,0.5);
+        }
+
+        .sidebar-toggle-btn:hover {
+            background: var(--amazon-orange);
+            color: var(--amazon-dark);
+        }
+
+        .sidebar-toggle-left {
+            left: 340px;
+            border-radius: 0 8px 8px 0;
+            border-left: none;
+        }
+
+        .sidebar-toggle-left.is-collapsed {
+            left: 0;
+        }
+
+        .sidebar-toggle-right {
+            right: 340px;
+            border-radius: 8px 0 0 8px;
+            border-right: none;
+        }
+
+        .sidebar-toggle-right.is-collapsed {
+            right: 0;
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding-bottom: 18px;
+            border-bottom: 2px solid var(--amazon-border);
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: 900;
+            color: var(--amazon-orange);
+            text-shadow: 0 0 15px rgba(255, 153, 0, 0.45);
+            letter-spacing: -0.5px;
+        }
+
+        .logo-sub {
+            font-size: 10px;
+            color: var(--text-sub);
+            text-transform: uppercase;
+            letter-spacing: 2.5px;
+            margin-top: -2px;
+        }
+
+        .instructions {
+            background-color: var(--surface-inner);
+            padding: 16px;
+            border-radius: 10px;
+            font-size: 12px;
+            line-height: 1.6;
+            color: var(--text-sub);
+            border-left: 4px solid var(--amazon-orange);
+            box-shadow: inset 0 2px 8px rgba(0,0,0,0.4);
+        }
+
+        .instructions b {
+            color: var(--text-main);
+        }
+
+        .section-title {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1.8px;
+            color: #728aa2;
+            margin-bottom: 6px;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .user-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            overflow-y: auto;
+            flex: 1;
+            padding-right: 8px;
+            scrollbar-width: thin;
+            scrollbar-color: var(--amazon-border) transparent;
+        }
+
+        .user-list::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .user-list::-webkit-scrollbar-thumb {
+            background-color: var(--amazon-border);
+            border-radius: 4px;
+        }
+
+        .user-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 12px;
+            background: var(--surface-panel);
+            padding: 10px 14px;
+            border-radius: 8px;
+            border: 1px solid var(--amazon-border);
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+        }
+
+        .user-item:hover {
+            border-color: var(--amazon-orange);
+            background: #1d334d;
+            transform: translateX(5px);
+            box-shadow: 0 4px 12px rgba(255, 153, 0, 0.15);
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .status-dot {
+            width: 9px;
+            height: 9px;
+            border-radius: 50%;
+            flex-shrink: 0;
+            box-shadow: 0 0 10px currentColor;
+        }
+
+        .face-avatar {
+            width: 26px;
+            height: 26px;
+            border-radius: 6px;
+            flex-shrink: 0;
+            image-rendering: pixelated;
+            image-rendering: -moz-crisp-edges;
+            image-rendering: crisp-edges;
+            border: 1px solid var(--amazon-border);
+            background: #0a131c;
+        }
+
+        .face-avatar-lg {
+            width: 48px;
+            height: 48px;
+            border-radius: 8px;
+            flex-shrink: 0;
+            image-rendering: pixelated;
+            image-rendering: -moz-crisp-edges;
+            image-rendering: crisp-edges;
+            border: 2px solid var(--amazon-orange);
+            background: #0a131c;
+        }
+
+        .face-avatar-tiny {
+            width: 18px;
+            height: 18px;
+            border-radius: 4px;
+            flex-shrink: 0;
+            image-rendering: pixelated;
+            image-rendering: -moz-crisp-edges;
+            image-rendering: crisp-edges;
+        }
+
+        .dept-tag {
+            font-size: 9px;
+            padding: 3px 8px;
+            border-radius: 5px;
+            background: rgba(255,255,255,0.06);
+            color: var(--text-sub);
+            font-weight: bold;
+        }
+
+        /* =========================================================================
+           3. CENTRAL GAME SCREEN
+           ========================================================================= */
+        .game-screen {
+            flex: 1;
+            position: relative;
+            background-color: var(--amazon-bg);
+            box-shadow: inset 0 0 80px rgba(0,0,0,0.9);
+        }
+
+        #canvas3d {
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+
+        #canvas3d canvas {
+            width: 100% !important;
+            height: 100% !important;
+            image-rendering: pixelated;
+            image-rendering: -moz-crisp-edges;
+            image-rendering: crisp-edges;
+        }
+
+        /* UI Toast Interaction */
+        .interaction-toast {
+            position: absolute;
+            bottom: 35px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: rgba(15, 23, 30, 0.98);
+            padding: 16px 32px;
+            border-radius: 40px;
+            border: 2px solid var(--amazon-orange);
+            font-size: 13.5px;
+            display: none;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.6), 0 0 25px rgba(255, 153, 0, 0.35);
+            pointer-events: none;
+            z-index: 20;
+            text-align: center;
+            animation: pulseToast 2.5s infinite;
+        }
+
+        @keyframes pulseToast {
+            0% { box-shadow: 0 15px 40px rgba(0,0,0,0.6), 0 0 20px rgba(255, 153, 0, 0.35); }
+            50% { box-shadow: 0 15px 40px rgba(0,0,0,0.6), 0 0 35px rgba(255, 153, 0, 0.7); }
+            100% { box-shadow: 0 15px 40px rgba(0,0,0,0.6), 0 0 20px rgba(255, 153, 0, 0.35); }
+        }
+
+        /* BGM Widget */
+
+        .util-btn {
+            position: absolute;
+            top: 25px;
+            right: 25px;
+            z-index: 25;
+            background: rgba(15, 23, 30, 0.9);
+            border: 1px solid var(--amazon-border);
+            color: var(--text-sub);
+            padding: 10px 16px;
+            border-radius: 8px;
+            font-size: 11px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.2s ease;
+        }
+
+        .util-btn:hover {
+            border-color: var(--amazon-orange);
+            color: #ffffff;
+            background: var(--amazon-dark);
+            box-shadow: 0 4px 15px rgba(255, 153, 0, 0.2);
+        }
+
+        .util-btn-secondary {
+            top: 68px;
+        }
+
+        .util-btn-secondary:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+
+        .util-btn-secondary.task-ready {
+            border-color: var(--neon-green);
+            color: #ffffff;
+            background: rgba(0, 255, 170, 0.12);
+            box-shadow: 0 4px 18px rgba(0, 255, 170, 0.4);
+            animation: taskPulse 1s ease-in-out infinite;
+        }
+
+        @keyframes taskPulse {
+            0%, 100% { box-shadow: 0 4px 18px rgba(0, 255, 170, 0.35); }
+            50% { box-shadow: 0 4px 26px rgba(0, 255, 170, 0.7); }
+        }
+
+        /* =========================================================================
+           4. FLOATING LABELS & VIRTUAL SCREENS
+           ========================================================================= */
+        .floating-label {
+            position: absolute;
+            z-index: 5;
+            transform: translate(-50%, -50%);
+            color: #ffffff;
+            font-weight: 900;
+            font-size: 10.5px;
+            padding: 8px 16px;
+            border-radius: 20px;
+            background: rgba(7, 11, 17, 0.95);
+            border: 1.5px solid rgba(255, 153, 0, 0.7);
+            pointer-events: none;
+            white-space: nowrap;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.6), 0 0 15px rgba(255, 153, 0, 0.25);
+        }
+
+        #label-ceo {
+            border-color: var(--neon-blue);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.6), 0 0 20px rgba(0, 229, 255, 0.45);
+        }
+
+        .virtual-web-screen {
+            position: absolute;
+            z-index: 4;
+            transform: translate(-50%, -100%);
+            width: 100px;
+            background: rgba(19, 31, 46, 0.96);
+            border: 1px solid var(--amazon-border);
+            border-radius: 8px;
+            font-size: 9px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.6);
+            pointer-events: none;
+            display: none;
+            overflow: hidden;
+        }
+        
+        .web-header {
+            background: #1a2a3a;
+            padding: 4px 8px;
+            display: flex;
+            gap: 5px;
+            align-items: center;
+            border-bottom: 1px solid var(--amazon-border);
+            color: var(--amazon-orange);
+            font-weight: 800;
+        }
+        
+        .web-dot { 
+            width: 5px; 
+            height: 5px; 
+            border-radius: 50%; 
+            background: var(--amazon-orange); 
+        }
+        
+        .web-body {
+            padding: 6px;
+            text-align: center;
+            color: var(--neon-green);
+            font-weight: 800;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        /* ป้ายสถานะอารมณ์พนักงาน แสดงเมื่อผู้เล่นเดินเข้าใกล้ */
+        .mood-bubble {
+            position: absolute;
+            z-index: 6;
+            transform: translate(-50%, -100%);
+            display: none;
+            pointer-events: none;
+            background: rgba(10, 16, 24, 0.95);
+            border: 2px solid var(--neon-green);
+            border-radius: 20px;
+            padding: 6px 14px;
+            font-size: 13px;
+            font-weight: 800;
+            white-space: nowrap;
+            box-shadow: 0 6px 18px rgba(0,0,0,0.6), 0 0 16px rgba(0, 255, 170, 0.35);
+            animation: moodPop 0.25s ease-out;
+        }
+
+        .mood-bubble .mood-emoji {
+            font-size: 18px;
+            margin-right: 6px;
+        }
+
+        @keyframes moodPop {
+            0% { transform: translate(-50%, -85%) scale(0.6); opacity: 0; }
+            100% { transform: translate(-50%, -100%) scale(1); opacity: 1; }
+        }
+
+        /* =========================================================================
+           5. SIDEBAR RIGHT: CONSOLE & DATA
+           ========================================================================= */
+        .sidebar-right {
+            width: 340px;
+            background-color: var(--amazon-dark);
+            border-left: 1px solid var(--amazon-border);
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            z-index: 10;
+            box-shadow: -5px 0 30px rgba(0,0,0,0.6);
+            overflow-y: auto;
+            scrollbar-width: thin;
+            scrollbar-color: var(--amazon-border) transparent;
+            transition: width 0.3s ease, padding 0.3s ease, border-color 0.3s ease;
+        }
+
+        .sidebar-right.collapsed {
+            width: 0;
+            padding: 24px 0;
+            border-left-color: transparent;
+            overflow: hidden;
+        }
+
+        .sidebar-right::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .sidebar-right::-webkit-scrollbar-thumb {
+            background-color: var(--amazon-border);
+            border-radius: 4px;
+        }
+
+        .data-box {
+            background-color: var(--surface-inner);
+            padding: 16px;
+            border-radius: 10px;
+            border: 1px solid var(--amazon-border);
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            box-shadow: inset 0 2px 6px rgba(0,0,0,0.3);
+        }
+
+        .financial-value {
+            font-size: 26px;
+            font-weight: 900;
+            color: var(--text-main);
+            letter-spacing: -0.5px;
+        }
+
+        .green-text { 
+            color: var(--neon-green); 
+            font-size: 11.5px;
+            text-shadow: 0 0 10px rgba(0,255,170,0.3);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .metric-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 12.5px;
+            border-bottom: 1px solid rgba(255,255,255,0.04);
+            padding-bottom: 8px;
+        }
+
+        .metric-row:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+
+        .metric-label {
+            color: var(--text-sub);
+        }
+
+        .metric-value {
+            font-weight: 800;
+            color: var(--text-main);
+        }
+
+        .log-display {
+            background-color: #080d14;
+            border: 1px solid var(--amazon-border);
+            border-radius: 10px;
+            padding: 18px;
+            flex: 1;
+            min-height: 220px;
+            font-size: 12px;
+            color: var(--text-sub);
+            line-height: 1.7;
+            overflow-y: auto;
+        }
+
+        .log-header-badge {
+            display: inline-block;
+            background: var(--amazon-orange);
+            color: var(--amazon-dark);
+            font-weight: 900;
+            padding: 3px 10px;
+            border-radius: 5px;
+            margin-bottom: 12px;
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+</head>
+<body>
+
+    <button id="toggle-left-btn" class="sidebar-toggle-btn sidebar-toggle-left" title="พับแผงด้านซ้าย">‹</button>
+    <button id="toggle-right-btn" class="sidebar-toggle-btn sidebar-toggle-right" title="พับแผงด้านขวา">›</button>
+
+    <div class="sidebar-left">
+        <div class="logo-container">
+            <div>
+                <div class="logo">amazon</div>
+                <div class="logo-sub">Global HQ & Command Center</div>
+            </div>
+        </div>
+        <div class="instructions">
+            <b>🎮 แผงบังคับทิศทางจำลอง:</b><br>
+            - บังคับพนักงานเรืองแสงสีฟ้าด้วยปุ่ม <b>[ W, A, S, D ]</b> หรือ <b>[ ปุ่มลูกศร ]</b><br>
+            - หมุนมุมมองกล้องได้อย่างอิสระโดยการคลิกลากเมาส์ และหมุนล้อเมาส์เพื่อซูม<br>
+            - เดินเข้าใกล้โซนโต๊ะพนักงานหรือ <b>"โดมกระจกใต้น้ำของ Jeff"</b> แล้วกดปุ่ม <b>[ E ]</b> หรือแตะปุ่ม <b>"📋 เช็คงาน"</b> มุมขวาบน เพื่อดึงสรุปประเมินรายงาน<br>
+            - เมื่อเข้าใกล้พนักงาน จะเห็นป้ายสถานะอารมณ์ลอยเหนือหัว เช่น 😡 หิว 😴 ง่วง ขึ้นมาให้ดูด้วย<br>
+            - กดปุ่ม <b>[ Spacebar ]</b> เพื่อกระโดด
+        </div>
+        <hr style="border:0; border-top:1px solid var(--amazon-border);">
+        <div class="section-title">
+            <span>รายชื่อสมาชิกที่ออนไลน์</span>
+            <span style="color: var(--neon-green); font-size: 10px;">⬤ Active</span>
+        </div>
+        <div class="user-list" id="html-user-list"></div>
+    </div>
+
+    <div class="game-screen" id="screen-container">
+        <div id="canvas3d"></div>
+        <div id="toast" class="interaction-toast">💡 กำลังเข้าใกล้เขตโต๊ะพนักงาน...</div>
+        <button id="reset-pos-btn" class="util-btn">🔄 รีเซ็ตพิกัดผู้เล่น</button>
+        <button id="check-task-btn" class="util-btn util-btn-secondary" disabled>📋 เช็คงาน [ E ]</button>
+
+        <div id="label-ceo" class="floating-label">🌊 JEFF'S UNDERWATER OFFICE (CEO)</div>
+        <div id="label-dev" class="floating-label">💻 SOFTWARE ENGINEERING (DEV)</div>
+        <div id="label-mkt" class="floating-label">📈 MARKETING & GROWTH</div>
+        <div id="label-ai" class="floating-label">🤖 AWS DEEP LEARNING (AI)</div>
+        <div id="label-hr" class="floating-label">👥 PEOPLE OPERATIONS (HR)</div>
+
+        <div id="web-container"></div>
+        <div id="mood-container"></div>
+    </div>
+
+    <div class="sidebar-right">
+        <div style="font-size: 14px; font-weight: 900; color: var(--amazon-orange); border-bottom: 2px solid var(--amazon-border); padding-bottom: 12px; text-align: center; text-transform: uppercase; letter-spacing: 1.5px;">
+            📊 Systems & Telemetry
+        </div>
+        
+        <div>
+            <div class="section-title">โครงสร้างความเสถียรของระบบคลาวด์</div>
+            <div class="data-box">
+                <div class="metric-row">
+                    <span class="metric-label">AWS EC2 Latency</span>
+                    <span class="metric-value" style="color: var(--neon-green);" id="m-latency">0.8 ms</span>
+                </div>
+                <div class="metric-row">
+                    <span class="metric-label">ปริมาณการใช้งานเซิร์ฟเวอร์</span>
+                    <span class="metric-value" style="color: var(--neon-green);" id="m-cpu">34% API Load</span>
+                </div>
+                <div class="metric-row">
+                    <span class="metric-label">ความดันโครงสร้างโดมกระจก</span>
+                    <span class="metric-value" style="color: var(--neon-blue);">1.02 atm (ปกติ)</span>
+                </div>
+                <div class="green-text">✔ เซิร์ฟเวอร์หลักของแผนผังและสัญญาณไฟปกติ</div>
+            </div>
+        </div>
+
+        <div>
+            <div class="section-title">แรงดันลมระบบระบายความร้อนโดม</div>
+            <div class="data-box">
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                    <span style="font-weight:bold; color: var(--neon-blue);">SEA DEPTH PSI</span>
+                    <span class="financial-value" id="m-psi">1,450 Psi</span>
+                </div>
+                <span style="font-size:11px; color: var(--text-sub);">อัตราการควบคุมกระแสลมอัดอัจฉริยะ 24 องศาเซลเซียส</span>
+            </div>
+        </div>
+
+        <div>
+            <div class="section-title">หุ้นบริษัท (AMZN) มูลค่า</div>
+            <div class="data-box">
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                    <span style="font-weight:bold; color: var(--amazon-orange);">AMZN</span>
+                    <span class="financial-value" id="m-stock">$228.50</span>
+                </div>
+                <div class="metric-row" style="border-bottom:none; padding-bottom:0;">
+                    <span class="metric-label">เปลี่ยนแปลงวันนี้</span>
+                    <span class="metric-value" id="m-stock-change" style="color: var(--neon-green);">+0.00 (0.00%)</span>
+                </div>
+            </div>
+        </div>
+
+        <div>
+            <div class="section-title">รายงานรายละเอียดผลการตรวจงาน</div>
+            <div class="log-header-badge">WORK REPORT SUMMARY</div>
+            <div id="workshop-details" class="log-display">
+                บังคับตัวละครสีฟ้านีออนของคุณเพื่อเดินเข้าไปในรัศมีโต๊ะพนักงานแต่ละท่าน จากนั้นกดแป้น [ Spacebar ] เพื่อยืนยันและดึงบันทึกผลการปฏิบัติงานของพนักงานท่านนั้นมาแสดง ณ ที่นี้ทันที...
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ข้อมูลพนักงานทั้ง 20 คน
+        // =========================================================================
+        // PIXEL FACE GENERATOR (สร้าง "หน้าพนักงาน" สไตล์การ์ตูนพิกเซลแบบสุ่มเฉพาะตัว)
+        // วาดด้วยโค้ดล้วนๆ ไม่ใช้รูปถ่ายจริง เพื่อให้เข้ากับธีมเกมพิกเซลย้อนยุค
+        // =========================================================================
+        function hashSeed(str) {
+            let h = 0;
+            for (let i = 0; i < str.length; i++) {
+                h = (h * 31 + str.charCodeAt(i)) >>> 0;
+            }
+            return h;
+        }
+
+        const SKIN_TONES = ['#ffdbac', '#f1c27d', '#e0ac69', '#c68642', '#8d5524', '#ffe0bd'];
+        const HAIR_COLORS = ['#2b1b0e', '#4a3222', '#000000', '#6b4423', '#c9a227', '#7a3b2e', '#3a3a3a'];
+
+        function buildEmployeeFaceCanvas(seedStr) {
+            const seed = hashSeed(seedStr);
+            const pick = (arr, offset) => arr[(seed >> offset) % arr.length];
+
+            const size = 32;
+            const canvas = document.createElement('canvas');
+            canvas.width = size;
+            canvas.height = size;
+            const ctx = canvas.getContext('2d');
+            ctx.imageSmoothingEnabled = false;
+
+            const skin = pick(SKIN_TONES, 0);
+            const hair = pick(HAIR_COLORS, 3);
+            const hasGlasses = (seed >> 6) % 3 === 0;
+            const hairStyleTall = (seed >> 8) % 2 === 0;
+            const mouthOpen = (seed >> 10) % 2 === 0;
+
+            const px = (x, y, w, h, color) => {
+                ctx.fillStyle = color;
+                ctx.fillRect(x, y, w, h);
+            };
+
+            // พื้นหลังโปร่งใส (ไม่วาดอะไรเลย ให้ canvas texture ใสรอบใบหน้า)
+            // ใบหน้ารูปสี่เหลี่ยมพิกเซลบล็อกใหญ่
+            px(6, 8, 20, 20, skin);
+            // ผมด้านบน
+            px(4, 2, 24, hairStyleTall ? 8 : 5, hair);
+            px(4, 8, 4, 8, hair);
+            px(24, 8, 4, 8, hair);
+            // ดวงตา
+            px(10, 16, 4, 4, '#1a1a1a');
+            px(18, 16, 4, 4, '#1a1a1a');
+            // แก้มสีชมพูอ่อนสไตล์การ์ตูน
+            px(8, 22, 3, 2, 'rgba(255,120,120,0.5)');
+            px(21, 22, 3, 2, 'rgba(255,120,120,0.5)');
+            // ปาก
+            if (mouthOpen) {
+                px(13, 24, 6, 3, '#8a3b2e');
+            } else {
+                px(13, 25, 6, 2, '#8a3b2e');
+            }
+            // แว่นตาสไตล์พิกเซล (บางคนเท่านั้น)
+            if (hasGlasses) {
+                ctx.strokeStyle = '#222222';
+                ctx.lineWidth = 1;
+                ctx.strokeRect(9, 15, 6, 6);
+                ctx.strokeRect(17, 15, 6, 6);
+                px(15, 17, 2, 1, '#222222');
+            }
+
+            return canvas;
+        }
+
+        const employeeFaceCache = {};
+        function getEmployeeFaceCanvas(emp) {
+            if (!employeeFaceCache[emp.id]) {
+                employeeFaceCache[emp.id] = buildEmployeeFaceCanvas(emp.id + emp.name);
+            }
+            return employeeFaceCache[emp.id];
+        }
+        function getEmployeeFaceDataURL(emp) {
+            return getEmployeeFaceCanvas(emp).toDataURL();
+        }
+
+        const employeesData = [
+            { id: 'emp1', name: 'Jeff Bezos', dept: 'Executive', color: '#ff9900', x: -29, z: -29, webName: 'blue.origin', mood: '😡', moodLabel: 'อารมณ์เสีย', task: '👑 <b>Jeff Bezos (CEO):</b> กำลังวิเคราะห์แผนการทดสอบปล่อยจรวดส่งสินค้า New Glenn จากฐานเรือเคลื่อนที่ใต้มหาสมุทร พร้อมสตรีมข้อมูลสถิติประเมินลูกค้าสมาชิกระดับ Prime ทั่วโลก' },
+            { id: 'emp2', name: 'Andy Jassy', dept: 'Executive', color: '#ffcc00', x: -23, z: -29, webName: 'aws.ceo', mood: '🍔', moodLabel: 'หิวข้าว', task: '💼 <b>Andy Jassy (Director):</b> สรุปพิกัดงบประมาณการจัดตั้งสถานีส่งกำลังด้วยคลื่นความถี่พิเศษเชื่อมต่อจากคลังพัสดุใต้พื้นทะเลลึกเพื่อกระจายความหนาแน่นเครือข่าย' },
+            { id: 'emp21', name: 'Diana Cole', dept: 'Executive', color: '#40c4ff', x: -29, z: -23, webName: 'ops.control', mood: '😡', moodLabel: 'อารมณ์เสีย', task: '🏢 <b>Diana Cole (COO):</b> ตรวจสอบภาพรวมการดำเนินงานทุกแผนกให้เชื่อมโยงกันอย่างราบรื่นทั่วทั้งองค์กร' },
+            { id: 'emp22', name: 'Marcus Wells', dept: 'Executive', color: '#ffd740', x: -23, z: -23, webName: 'finance.hub', mood: '🍔', moodLabel: 'หิวข้าว', task: '💰 <b>Marcus Wells (CFO):</b> วิเคราะห์งบลงทุนขยายคลังสินค้าใต้น้ำแห่งใหม่ให้คุ้มค่าต่อผู้ถือหุ้นสูงสุด' },
+            { id: 'emp3', name: 'Sarah Connor', dept: 'Dev', color: '#e040fb', x: -26, z: -1, webName: 'aws.git', mood: '😴', moodLabel: 'ง่วงนอน', task: '💻 <b>Sarah Connor (Core Dev):</b> ตรวจสอบประสิทธิภาพการทำขนานของคำขอคิวดึงข้อมูลคลังสินค้า เพื่อลด Latency สูงสุดในช่วงเทศกาลจับจ่าย' },
+            { id: 'emp4', name: 'Mike Shinoda', dept: 'Dev', color: '#00ffaa', x: -21, z: -1, webName: 'figma.ui', mood: '😊', moodLabel: 'อารมณ์ดี', task: '🎨 <b>Mike Shinoda (UI Designer):</b> แก้ไขเฟรมเรนเดอร์โครงสร้างตะกร้าสินค้าในโหมดประหยัดพลังงานเพื่อเพิ่มยอดผู้ใช้ชำระเงินผ่านมือถือ' },
+            { id: 'emp5', name: 'John Doe', dept: 'Dev', color: '#00b0ff', x: -16, z: -1, webName: 'db.cluster', mood: '☕', moodLabel: 'อยากได้กาแฟ', task: '⚙️ <b>John Doe (Database Eng):</b> ปรับแต่งระบบดัชนีคลัสเตอร์จัดเก็บประวัติการทำธุรกรรมและจัดการปัญระบบล็อกข้อมูลล้มเหลวชั่วคราว' },
+            { id: 'emp6', name: 'Emily Rose', dept: 'Dev', color: '#18ffff', x: -11, z: -1, webName: 'qa.test', mood: '🔥', moodLabel: 'ไฟลุก ทำงานเต็มที่', task: '🐛 <b>Emily Rose (QA Specialist):</b> วางโค้ดจำลองคลิกกดปุ่มจ่ายเงินพร้อมกันหลายล้านครั้งเพื่อตรวจสอบระบบความถูกต้องของยอดขาย' },
+            { id: 'emp7', name: 'Chris Evans', dept: 'Dev', color: '#2979ff', x: -6, z: -1, webName: 'aws.deploy', mood: '😤', moodLabel: 'เครียดจัด', task: '🐳 <b>Chris Evans (DevOps Eng):</b> วางโครงข่ายคลัสเตอร์ Kubernetes สำรองสำหรับควบคุมสถาปัตยกรรมไมโครเซอร์วิสไม่ให้เกิดบัคล่ม' },
+            { id: 'emp23', name: 'Priya Patel', dept: 'Dev', color: '#7c4dff', x: -26, z: 5, webName: 'api.backend', mood: '😴', moodLabel: 'ง่วงนอน', task: '🔧 <b>Priya Patel (Backend Eng):</b> ปรับแต่ง API คลังสินค้าให้รองรับคำขอพร้อมกันได้มากขึ้นในช่วงเทศกาล' },
+            { id: 'emp24', name: 'Liam Chen', dept: 'Dev', color: '#448aff', x: -21, z: 5, webName: 'ui.frontend', mood: '😊', moodLabel: 'อารมณ์ดี', task: '🖥️ <b>Liam Chen (Frontend Eng):</b> ปรับหน้าจอแอปมือถือให้โหลดเร็วขึ้นและใช้งานง่ายกว่าเดิม' },
+            { id: 'emp25', name: 'Noah Kim', dept: 'Dev', color: '#00bfa5', x: -16, z: 5, webName: 'mobile.app', mood: '☕', moodLabel: 'อยากได้กาแฟ', task: '📱 <b>Noah Kim (Mobile Eng):</b> แก้บั๊กการแจ้งเตือนสถานะพัสดุที่ค้างอยู่บนแอปมือถือ' },
+            { id: 'emp26', name: 'Ava Torres', dept: 'Dev', color: '#ff6e40', x: -11, z: 5, webName: 'sec.audit', mood: '🔥', moodLabel: 'ไฟลุก ทำงานเต็มที่', task: '🔒 <b>Ava Torres (Security Eng):</b> ตรวจสอบช่องโหว่ระบบยืนยันตัวตนก่อนเข้าถึงข้อมูลลูกค้า' },
+            { id: 'emp27', name: 'Ethan Wright', dept: 'Dev', color: '#69f0ae', x: -6, z: 5, webName: 'infra.platform', mood: '😤', moodLabel: 'เครียดจัด', task: '🛠️ <b>Ethan Wright (Platform Eng):</b> ดูแลระบบพื้นฐานเซิร์ฟเวอร์ให้พร้อมรองรับทราฟฟิกสูงสุดของปี' },
+            { id: 'emp8', name: 'Jessica Alba', dept: 'Marketing', color: '#ff4081', x: 8, z: -13, webName: 'growth.ads', mood: '🥱', moodLabel: 'เบื่องาน', task: '📈 <b>Jessica Alba (Mkt Lead):</b> เปิดตัวแผนแคมเปญโฆษณาด่วนพิเศษผ่านวิดีโอ Prime Video เพื่อกระตุ้นสถิติการใช้งานบริการจัดส่งสินค้าฟรีภายในหนึ่งวัน' },
+            { id: 'emp9', name: 'David Beckham', dept: 'Marketing', color: '#00e676', x: 13, z: -13, webName: 'global.deal', mood: '😎', moodLabel: 'มั่นใจสุดๆ', task: '🤝 <b>David Beckham (BD Manager):</b> เจรจากับพันธมิตรจัดหาชุดกีฬาระดับโลกเพื่อสิทธิประโยชน์ในการจำหน่ายแบรนด์ลิมิเต็ดบนแพลตฟอร์ม' },
+            { id: 'emp10', name: 'Ryan Reynolds', dept: 'Marketing', color: '#69f0ae', x: 18, z: -13, webName: 'funnel.mkt', mood: '🤒', moodLabel: 'ไม่ค่อยสบาย', task: '📊 <b>Ryan Reynolds (Analyst):</b> สรุปผลความคุ้มค่าของการใช้จ่ายค่าโฆษณาโซเชียลมีเดียในทวีปเอเชียตะวันออกเฉียงใต้' },
+            { id: 'emp11', name: 'Chloe Grace', dept: 'Marketing', color: '#ff80ab', x: 23, z: -13, webName: 'social.pr', mood: '😡', moodLabel: 'อารมณ์เสีย', task: '📱 <b>Chloe Grace (PR):</b> เตรียมความพร้อมในการเปิดตัวกล่องพัสดุไบโอโพลีเมอร์ชนิดใหม่ที่เป็นมิตรกับระบบนิเวศ 100%' },
+            { id: 'emp12', name: 'James McAvoy', dept: 'Marketing', color: '#b9f6ca', x: 28, z: -13, webName: 'crm.care', mood: '🍔', moodLabel: 'หิวข้าว', task: '✉️ <b>James McAvoy (CRM):</b> ปรับระบบอีเมลแจ้งส่วนลดและรหัสส่งสินค้าเฉพาะบุคคลตามช่วงเวลาที่เข้าใช้งานแอปบ่อยที่สุด' },
+            { id: 'emp28', name: 'Sofia Ramirez', dept: 'Marketing', color: '#ff8a80', x: 8, z: -7, webName: 'content.lead', mood: '🥱', moodLabel: 'เบื่องาน', task: '✍️ <b>Sofia Ramirez (Content Lead):</b> วางแผนคอนเทนต์โปรโมทสินค้าขายดีประจำเดือนบนทุกแพลตฟอร์ม' },
+            { id: 'emp29', name: 'Lucas Bennett', dept: 'Marketing', color: '#ffab40', x: 13, z: -7, webName: 'ads.performance', mood: '😎', moodLabel: 'มั่นใจสุดๆ', task: '📢 <b>Lucas Bennett (Ads Eng):</b> ปรับแคมเปญโฆษณาให้ตรงกลุ่มเป้าหมายและลดต้นทุนต่อคลิก' },
+            { id: 'emp30', name: 'Mia Nakamura', dept: 'Marketing', color: '#f48fb1', x: 18, z: -7, webName: 'brand.identity', mood: '🤒', moodLabel: 'ไม่ค่อยสบาย', task: '🎯 <b>Mia Nakamura (Brand Manager):</b> ออกแบบแนวทางภาพลักษณ์แบรนด์ให้สอดคล้องกันทุกช่องทาง' },
+            { id: 'emp31', name: 'Oliver Santos', dept: 'Marketing', color: '#b2ff59', x: 23, z: -7, webName: 'growth.experiments', mood: '😡', moodLabel: 'อารมณ์เสีย', task: '📈 <b>Oliver Santos (Growth Eng):</b> ทดลอง A/B Testing หน้าตะกร้าสินค้าเพื่อเพิ่มอัตราการซื้อ' },
+            { id: 'emp32', name: 'Grace Adeyemi', dept: 'Marketing', color: '#ea80fc', x: 28, z: -7, webName: 'seo.search', mood: '🍔', moodLabel: 'หิวข้าว', task: '🔍 <b>Grace Adeyemi (SEO Lead):</b> ปรับปรุงคำค้นหาสินค้าให้ติดอันดับต้นๆ ของหน้าผลการค้นหา' },
+            { id: 'emp13', name: 'Kevin Mitnick', dept: 'AI Lab', color: '#aa00ff', x: -25.5, z: 17.5, webName: 'sagemaker', mood: '😴', moodLabel: 'ง่วงนอน', task: '🧪 <b>Kevin Mitnick (AI Scientist):</b> ฝึกฝนโมเดลคลาวด์วิเคราะห์ภาพกล้องวงจรปิดเพื่อตรวจสอบการบุบสลายหรือชำรุดของสินค้าภายในโกดังสินค้าอัตโนมัติ' },
+            { id: 'emp14', name: 'Rachel Green', dept: 'AI Lab', color: '#ff6d00', x: -20.5, z: 17.5, webName: 'llm.agent', mood: '😊', moodLabel: 'อารมณ์ดี', task: '☁️ <b>Rachel Green (LLM Engineer):</b> เสริมแชทบอทสนับสนุนลูกค้าด้วยระบบสร้างเสียงพูดอัตโนมัติที่ช่วยแก้ไขปัญหาอย่างเป็นมิตร' },
+            { id: 'emp15', name: 'Daniel Craig', dept: 'AI Lab', color: '#d500f9', x: -15.5, z: 17.5, webName: 'robot.ai', mood: '☕', moodLabel: 'อยากได้กาแฟ', task: '🤖 <b>Daniel Craig (Robotics):</b> อัปเดตเฟิร์มแวร์เพื่อเพิ่มประสิทธิภาพการหลบหลีกสิ่งกีดขวางของกลุ่มตู้เคลื่อนย้าย Kiva ในคลังกระจายสินค้า' },
+            { id: 'emp16', name: 'Megan Fox', dept: 'AI Lab', color: '#ffab40', x: -10.5, z: 17.5, webName: 'cv.detect', mood: '🔥', moodLabel: 'ไฟลุก ทำงานเต็มที่', task: '🧠 <b>Megan Fox (Vision Eng):</b> ตรวจทานโครงข่ายวิเคราะห์พิกัดขนาดพัสดุแบบสามมิติเพื่อสั่งงานเครื่องแพ็กของอัจฉริยะ' },
+            { id: 'emp33', name: 'Yuki Tanaka', dept: 'AI Lab', color: '#18ffff', x: -25.5, z: 22.5, webName: 'ml.training', mood: '😴', moodLabel: 'ง่วงนอน', task: '🧬 <b>Yuki Tanaka (ML Engineer):</b> ฝึกโมเดลพยากรณ์ความต้องการสินค้าล่วงหน้าให้แม่นยำขึ้น' },
+            { id: 'emp34', name: 'Zara Malik', dept: 'AI Lab', color: '#e040fb', x: -20.5, z: 22.5, webName: 'data.science', mood: '😊', moodLabel: 'อารมณ์ดี', task: '📊 <b>Zara Malik (Data Scientist):</b> วิเคราะห์ข้อมูลพฤติกรรมลูกค้าเพื่อแนะนำสินค้าที่ตรงใจมากขึ้น' },
+            { id: 'emp35', name: 'Felix Novak', dept: 'AI Lab', color: '#64ffda', x: -15.5, z: 22.5, webName: 'nlp.chatbot', mood: '☕', moodLabel: 'อยากได้กาแฟ', task: '💬 <b>Felix Novak (NLP Engineer):</b> ปรับปรุงแชทบอทให้ตอบคำถามลูกค้าได้เป็นธรรมชาติยิ่งขึ้น' },
+            { id: 'emp36', name: 'Ivy Choudhury', dept: 'AI Lab', color: '#b388ff', x: -10.5, z: 22.5, webName: 'vision.tracking', mood: '🔥', moodLabel: 'ไฟลุก ทำงานเต็มที่', task: '👁️ <b>Ivy Choudhury (Vision Engineer):</b> พัฒนาโมเดลตรวจจับสินค้าบนสายพานให้แม่นยำในที่แสงน้อย' },
+            { id: 'emp17', name: 'Amanda Seyfried', dept: 'HR', color: '#ffeb3b', x: 10.5, z: 17.5, webName: 'talent.acq', mood: '😤', moodLabel: 'เครียดจัด', task: '👥 <b>Amanda Seyfried (HR):</b> ดำเนินการคัดสรรบุคลากรขั้นสูงผ่านระบบคัดกรองออนไลน์เพื่อสรรหาผู้เชี่ยวชาญด้านควอนตัมคอมพิวติ้ง' },
+            { id: 'emp18', name: 'Brian O\'Conner', dept: 'HR', color: '#eeff41', x: 15.5, z: 17.5, webName: 'notion.wiki', mood: '🥱', moodLabel: 'เบื่องาน', task: '📝 <b>Brian (Ops):</b> รวบรวมแนวทางสวัสดิการส่งเสริมสุขภาพกายและสุขภาพจิตให้กับพนักงานแผนกพัฒนาคอร์แอปพลิเคชันทั่วโลก' },
+            { id: 'emp19', name: 'Lisa Simpson', dept: 'HR', color: '#ffff8d', x: 20.5, z: 17.5, webName: 'comm.board', mood: '😎', moodLabel: 'มั่นใจสุดๆ', task: '💬 <b>Lisa Simpson (Internal):</b> ดำเนินโครงการรณรงค์ลดเวลาทำงานหน้าคอมพิวเตอร์และกระตุ้นการขยับยืดเส้นยืดสาย' },
+            { id: 'emp20', name: 'Thomas Edison', dept: 'HR', color: '#c6ff00', x: 25.5, z: 17.5, webName: 'payroll.sys', mood: '🤒', moodLabel: 'ไม่ค่อยสบาย', task: '💵 <b>Thomas Edison (Payroll):</b> ตรวจสอบงบกองทุนสวัสดิการรวมถึงการอนุมัติโบนัสพิเศษให้กับวิศวกรผู้คิดค้นสิทธิบัตรส่งสินค้าลอยน้ำสำเร็จ' },
+            { id: 'emp37', name: 'Ben Turner', dept: 'HR', color: '#ffe57f', x: 10.5, z: 22.5, webName: 'talent.hire', mood: '😤', moodLabel: 'เครียดจัด', task: '🧑‍💼 <b>Ben Turner (Recruiter):</b> คัดกรองผู้สมัครตำแหน่งวิศวกรระบบอัตโนมัติรุ่นใหม่' },
+            { id: 'emp38', name: 'Hana Yamada', dept: 'HR', color: '#ffd180', x: 15.5, z: 22.5, webName: 'people.ops', mood: '🥱', moodLabel: 'เบื่องาน', task: '🗂️ <b>Hana Yamada (People Ops):</b> ปรับปรุงระบบลาป่วย-ลาพักร้อนให้พนักงานใช้งานง่ายขึ้น' },
+            { id: 'emp39', name: 'Leo Fischer', dept: 'HR', color: '#ccff90', x: 20.5, z: 22.5, webName: 'learning.dev', mood: '😎', moodLabel: 'มั่นใจสุดๆ', task: '📚 <b>Leo Fischer (L&D):</b> จัดคอร์สอบรมทักษะใหม่ให้พนักงานทุกแผนกเข้าถึงได้ฟรี' },
+            { id: 'emp40', name: 'Nora Osei', dept: 'HR', color: '#a7ffeb', x: 25.5, z: 22.5, webName: 'benefits.team', mood: '🤒', moodLabel: 'ไม่ค่อยสบาย', task: '🎁 <b>Nora Osei (Benefits Team):</b> ทบทวนสวัสดิการประกันสุขภาพให้ครอบคลุมครอบครัวพนักงานมากขึ้น' }
+        ];
+
+        const detailsBox = document.getElementById('workshop-details');
+
+        // เรนเดอร์รายชื่อพนักงานฝั่งซ้าย
+        const userListContainer = document.getElementById('html-user-list');
+        employeesData.forEach(emp => {
+            userListContainer.innerHTML += `
+                <div class="user-item" onclick="focusCameraOnEmployee('${emp.id}')">
+                    <div class="user-info">
+                        <img class="face-avatar" src="${getEmployeeFaceDataURL(emp)}" alt="${emp.name}">
+                        <span><b>${emp.name}</b></span>
+                    </div>
+                    <span class="dept-tag">${emp.dept}</span>
+                </div>`;
+        });
+
+        // เรนเดอร์จอโฮโลแกรมลอยฟ้ารอบตัวพนักงาน
+        const webContainer = document.getElementById('web-container');
+        employeesData.forEach(emp => {
+            webContainer.innerHTML += `
+                <div id="web-${emp.id}" class="virtual-web-screen">
+                    <div class="web-header">
+                        <img class="face-avatar-tiny" src="${getEmployeeFaceDataURL(emp)}" alt="${emp.name}">
+                        <span>${emp.webName}</span>
+                    </div>
+                    <div class="web-body">${emp.name}</div>
+                </div>`;
+        });
+
+        // เรนเดอร์ป้ายสถานะอารมณ์ที่จะโผล่ขึ้นเมื่อผู้เล่นเดินเข้าใกล้
+        const moodContainer = document.getElementById('mood-container');
+        employeesData.forEach(emp => {
+            moodContainer.innerHTML += `
+                <div id="mood-${emp.id}" class="mood-bubble">
+                    <span class="mood-emoji">${emp.mood}</span><span>${emp.moodLabel}</span>
+                </div>`;
+        });
+
+        // พิกัดป้ายบอกเขตแผนกในออฟฟิศ เพื่อไม่ให้เกิดข้อผิดพลาดในการอ้างอิง
+        const labelsData = [
+            { id: 'label-ceo', pos: new THREE.Vector3(-26, 3.5, -26) },
+            { id: 'label-dev', pos: new THREE.Vector3(-16, 3.5, 2) },
+            { id: 'label-mkt', pos: new THREE.Vector3(18, 3.5, -10) },
+            { id: 'label-ai', pos: new THREE.Vector3(-18, 3.5, 20) },
+            { id: 'label-hr', pos: new THREE.Vector3(18, 3.5, 20) }
+        ];
+
+        // =========================================================================
+        // THREE.JS SCENE CONFIGURATION (ฉากกราฟิก 3 มิติอย่างสมบูรณ์แบบ)
+        // =========================================================================
+        const container = document.getElementById('canvas3d');
+        const scene = new THREE.Scene();
+        scene.background = new THREE.Color('#050a10'); // บรรยากาศอวกาศมืดสลัว
+
+        // ตั้งค่ากล้องมองเห็นระยะตื้นลึกเสถียร (ขยายระยะไกลสุดให้เข้ากับห้องที่ใหญ่ขึ้น)
+        const camera = new THREE.PerspectiveCamera(40, container.clientWidth / container.clientHeight, 0.1, 1500);
+        camera.position.set(0, 46, 78);
+
+        // เครื่องเรนเดอร์ภาพสไตล์การ์ตูนพิกเซลย้อนยุค: ปิด antialias + ลดความละเอียดจริง
+        // แล้วยืด canvas ด้วย CSS (image-rendering: pixelated) เพื่อให้ได้ภาพแบบเกมการ์ตูน 3 มิติยุคเก่า
+        const PIXEL_SCALE = 0.42; // ยิ่งค่าน้อย ยิ่งพิกเซลใหญ่/การ์ตูนจัด
+        const renderer = new THREE.WebGLRenderer({ antialias: false, alpha: false, powerPreference: "high-performance" });
+        renderer.setSize(container.clientWidth * PIXEL_SCALE, container.clientHeight * PIXEL_SCALE, false);
+        renderer.setPixelRatio(1);
+        renderer.shadowMap.enabled = true;
+        renderer.shadowMap.type = THREE.BasicShadowMap; // เงาแบบขอบคมสไตล์การ์ตูนพิกเซล
+        container.appendChild(renderer.domElement);
+
+        // ระบบควบคุมมุมกล้องอย่างอิสระ
+        const controls = new THREE.OrbitControls(camera, renderer.domElement);
+        controls.enableDamping = true;
+        controls.dampingFactor = 0.05;
+        controls.maxPolarAngle = Math.PI / 2.15; // ห้ามกล้องมุดลงใต้พื้นดิน
+        controls.minDistance = 6;
+        controls.maxDistance = 140;
+
+        // =========================================================================
+        // LIGHTING ARCHITECTURE (การจัดระบบทิศทางแสงเงาตกกระทบ)
+        // =========================================================================
+        const ambientLight = new THREE.AmbientLight('#0d1622', 1.5);
+        scene.add(ambientLight);
+
+        // แสงสลัวสีน้ำเงินทะเลลึก
+        const blueGlobeLight = new THREE.DirectionalLight('#0055ff', 0.8);
+        blueGlobeLight.position.set(-20, 40, -20);
+        scene.add(blueGlobeLight);
+
+        // แสงสว่างหลักที่ส่องให้เกิดมิติเงาตกกระทบสมจริง
+        const keySunLight = new THREE.DirectionalLight('#ffffff', 1.2);
+        keySunLight.position.set(20, 40, 30);
+        keySunLight.castShadow = true;
+        keySunLight.shadow.mapSize.width = 2048;
+        keySunLight.shadow.mapSize.height = 2048;
+        keySunLight.shadow.camera.near = 0.5;
+        keySunLight.shadow.camera.far = 100;
+        const shSize = 42;
+        keySunLight.shadow.camera.left = -shSize;
+        keySunLight.shadow.camera.right = shSize;
+        keySunLight.shadow.camera.top = shSize;
+        keySunLight.shadow.camera.bottom = -shSize;
+        keySunLight.shadow.bias = -0.0005;
+        scene.add(keySunLight);
+
+        // ไฟนีออนสีส้มตกแต่งกึ่งกลางจุดต้อนรับ
+        const orangeCoreLight = new THREE.PointLight('#ff9900', 3.5, 40, 1.0);
+        orangeCoreLight.position.set(0, 5, 0);
+        scene.add(orangeCoreLight);
+
+        // หมอกสไตล์การ์ตูนช่วยให้ห้องใหญ่ขึ้นดูมีมิติและกลืนไปกับพื้นหลังอวกาศ
+        scene.fog = new THREE.Fog('#050a10', 55, 150);
+
+        // =========================================================================
+        // TOON / CEL-SHADING HELPERS (ทำให้ทุกวัตถุดูเหมือนการ์ตูน 3 มิติพิกเซลย้อนยุค)
+        // =========================================================================
+        function buildToonGradientMap(steps) {
+            const size = steps;
+            const data = new Uint8Array(size);
+            for (let i = 0; i < size; i++) {
+                data[i] = Math.floor((i / (size - 1)) * 255);
+            }
+            const tex = new THREE.DataTexture(data, size, 1, THREE.LuminanceFormat);
+            tex.minFilter = THREE.NearestFilter;
+            tex.magFilter = THREE.NearestFilter;
+            tex.needsUpdate = true;
+            return tex;
+        }
+        const toonGradient3 = buildToonGradientMap(3);
+        const toonGradient4 = buildToonGradientMap(4);
+
+
+        // แปลงวัสดุ MeshStandardMaterial/MeshPhongMaterial ทั้งฉากให้เป็น MeshToonMaterial แบบขั้นบันไดสีแบนการ์ตูน
+        // และเติมเส้นขอบดำหนา (inverted-hull outline) ให้กับตาข่ายทุกชิ้น เพื่อให้ได้ลุคการ์ตูนเก่าเหลี่ยมๆ พิกเซล
+        function toonifyObject(root) {
+            const outlineTargets = [];
+            root.traverse((node) => {
+                if (!node.isMesh || !node.material) return;
+                const mats = Array.isArray(node.material) ? node.material : [node.material];
+                let hasTransparent = false;
+                const newMats = mats.map((m) => {
+                    if (m.transparent) hasTransparent = true;
+                    if (m.isMeshToonMaterial || m.userData.isToonified) return m;
+                    if (m.isMeshBasicMaterial) return m; // ไฟ LED/หลอดไฟ คงความสว่างแบนไว้เหมือนเดิม
+                    const toon = new THREE.MeshToonMaterial({
+                        color: m.color ? m.color.clone() : new THREE.Color('#ffffff'),
+                        emissive: m.emissive ? m.emissive.clone() : new THREE.Color('#000000'),
+                        emissiveIntensity: m.emissiveIntensity !== undefined ? m.emissiveIntensity : 1,
+                        transparent: m.transparent,
+                        opacity: m.opacity,
+                        side: m.side,
+                        map: m.map || null,
+                        gradientMap: (m.roughness !== undefined && m.roughness < 0.3) ? toonGradient3 : toonGradient4
+                    });
+                    toon.userData.isToonified = true;
+                    return toon;
+                });
+                node.material = Array.isArray(node.material) ? newMats : newMats[0];
+                if (!hasTransparent) outlineTargets.push(node);
+            });
+
+            // เพิ่มเส้นขอบดำสไตล์การ์ตูนรอบตาข่ายหลักๆ (เว้นกระจกโปร่งใส/พื้น/ผนังขนาดใหญ่ และวัตถุเล็กจิ๋ว)
+            outlineTargets.forEach((mesh) => {
+                if (mesh.userData.hasOutline) return;
+                const box = new THREE.Box3().setFromObject(mesh);
+                const sizeVec = new THREE.Vector3();
+                box.getSize(sizeVec);
+                const maxDim = Math.max(sizeVec.x, sizeVec.y, sizeVec.z);
+                if (maxDim < 0.05 || maxDim > 10) return; // ข้ามชิ้นเล็กจิ๋วและชิ้นใหญ่มาก (พื้น/ผนัง)
+                const outlineMat = new THREE.MeshBasicMaterial({ color: '#05070a', side: THREE.BackSide });
+                const outlineMesh = new THREE.Mesh(mesh.geometry, outlineMat);
+                outlineMesh.scale.multiplyScalar(1.045);
+                mesh.userData.hasOutline = true;
+                mesh.add(outlineMesh);
+            });
+        }
+
+        let collidableObjects = []; // อาเรย์สำหรับเก็บวัตถุสิ่งกีดขวางเพื่อคำนวณการเดินชนกัน
+
+        // =========================================================================
+        // ENVIRONMENT DESIGN (การตกแต่งรายละเอียดพื้น แผนผังตึก และสิ่งแวดล้อม)
+        // =========================================================================
+        
+        // แผ่นพื้นคอนกรีตสังเคราะห์ของ Amazon
+        const groundGeo = new THREE.PlaneGeometry(84, 84, 12, 12);
+        const groundMat = new THREE.MeshStandardMaterial({ 
+            color: '#101a24', 
+            roughness: 0.8, 
+            metalness: 0.3 
+        });
+        const ground = new THREE.Mesh(groundGeo, groundMat);
+        ground.rotation.x = -Math.PI / 2;
+        ground.receiveShadow = true;
+        scene.add(ground);
+
+        // =========================================================================
+        // ผนังห้องขนาดใหญ่ทรงเหลี่ยมสไตล์การ์ตูนพิกเซล พร้อมหน้าต่างเรืองแสง
+        // =========================================================================
+        function buildCartoonRoomWalls(halfSize, wallHeight) {
+            const wallGroup = new THREE.Group();
+            const wallMat = new THREE.MeshStandardMaterial({ color: '#0e1a26', roughness: 0.9, metalness: 0.1 });
+            const trimMat = new THREE.MeshStandardMaterial({ color: '#ff9900', roughness: 0.5, metalness: 0.3 });
+            const windowMat = new THREE.MeshBasicMaterial({ color: '#00e5ff' });
+
+            const wallDefs = [
+                { w: halfSize * 2 + 2, pos: [0, wallHeight / 2, -halfSize - 1], rotY: 0 },
+                { w: halfSize * 2 + 2, pos: [0, wallHeight / 2, halfSize + 1], rotY: 0 },
+                { w: halfSize * 2 + 2, pos: [-halfSize - 1, wallHeight / 2, 0], rotY: Math.PI / 2 },
+                { w: halfSize * 2 + 2, pos: [halfSize + 1, wallHeight / 2, 0], rotY: Math.PI / 2 }
+            ];
+
+            wallDefs.forEach((def) => {
+                const wall = new THREE.Mesh(new THREE.BoxGeometry(def.w, wallHeight, 1.2), wallMat);
+                wall.position.set(def.pos[0], def.pos[1], def.pos[2]);
+                wall.rotation.y = def.rotY;
+                wall.receiveShadow = true;
+                wall.castShadow = false;
+                wallGroup.add(wall);
+
+                // ขอบบนสีส้มหนาสไตล์การ์ตูน
+                const trim = new THREE.Mesh(new THREE.BoxGeometry(def.w, 0.6, 1.4), trimMat);
+                trim.position.set(def.pos[0], wallHeight + 0.3, def.pos[2]);
+                trim.rotation.y = def.rotY;
+                wallGroup.add(trim);
+
+                // หน้าต่างพิกเซลเรืองแสงเรียงเป็นแถว
+                const winCount = 8;
+                for (let i = 0; i < winCount; i++) {
+                    const win = new THREE.Mesh(new THREE.BoxGeometry(2.2, 2.2, 0.2), windowMat);
+                    const t = (i + 0.5) / winCount - 0.5;
+                    const offset = t * (def.w - 6);
+                    if (def.rotY === 0) {
+                        win.position.set(def.pos[0] + offset, wallHeight * 0.55, def.pos[2] + (def.pos[2] > 0 ? -0.65 : 0.65));
+                    } else {
+                        win.position.set(def.pos[0] + (def.pos[0] > 0 ? -0.65 : 0.65), wallHeight * 0.55, def.pos[2] + offset);
+                    }
+                    win.rotation.y = def.rotY;
+                    wallGroup.add(win);
+                }
+            });
+
+            scene.add(wallGroup);
+            return wallGroup;
+        }
+        buildCartoonRoomWalls(41, 16);
+
+        // พื้นที่แยกต่างระดับตามแผนกต่างๆ
+        function buildOfficeZonePlatform(w, d, x, z, colorHex) {
+            const group = new THREE.Group();
+            
+            const mainBox = new THREE.Mesh(
+                new THREE.BoxGeometry(w, 0.25, d),
+                new THREE.MeshStandardMaterial({ color: colorHex, roughness: 0.7, metalness: 0.4 })
+            );
+            mainBox.position.y = 0.125;
+            mainBox.receiveShadow = true;
+            mainBox.castShadow = true;
+            group.add(mainBox);
+
+            // ขอบนีออนเรืองแสงเล็กๆ ตกแต่งขอบพื้นยกเพื่อความทันสมัย
+            const borderGeo = new THREE.BoxGeometry(w + 0.1, 0.08, d + 0.1);
+            const borderMat = new THREE.MeshStandardMaterial({ color: '#ff9900', emissive: '#aa5500', roughness: 0.2 });
+            const border = new THREE.Mesh(borderGeo, borderMat);
+            border.position.y = 0.04;
+            group.add(border);
+
+            group.position.set(x, 0, z);
+            scene.add(group);
+            
+            // หมายเหตุ: ไม่เพิ่ม mainBox เข้า collidableObjects เพราะเป็น "พื้น" ที่ต้อง
+            // เดินขึ้นไปได้ ไม่ใช่สิ่งกีดขวาง (เดิมทำให้เดินเข้าโซนแผนกไม่ได้เลย)
+            return group;
+        }
+
+        buildOfficeZonePlatform(32, 17, -16, 2, '#112233');       // Dev Zone
+        buildOfficeZonePlatform(32, 17, 18, -10, '#162838');      // Marketing Zone
+        buildOfficeZonePlatform(24, 15, -18, 20, '#1a1d2d');      // AI Lab Zone
+        buildOfficeZonePlatform(24, 15, 18, 20, '#12261e');       // HR Zone
+
+        // =========================================================================
+        // JEFF'S COMMAND DOME (ห้องกระจกโดมควบคุมสั่งการใต้น้ำ)
+        // =========================================================================
+        buildOfficeZonePlatform(15, 15, -26, -26, '#082035');
+
+        // โครงสร้างกระจกโดมครึ่งทรงกลม
+        const domeGlassGeo = new THREE.SphereGeometry(6.5, 36, 28, 0, Math.PI * 2, 0, Math.PI / 2);
+        const domeGlassMat = new THREE.MeshStandardMaterial({ 
+            color: '#00e5ff', 
+            transparent: true, 
+            opacity: 0.25, 
+            roughness: 0.05, 
+            metalness: 0.95,
+            side: THREE.DoubleSide
+        });
+        const jeffDome = new THREE.Mesh(domeGlassGeo, domeGlassMat);
+        jeffDome.position.set(-26, 0.12, -26);
+        scene.add(jeffDome);
+
+        // จุดแสงนีออนสีฟ้าน้ำทะเลลึกภายในห้องโดม
+        const domeLight = new THREE.PointLight('#00e5ff', 4.0, 20, 1.0);
+        domeLight.position.set(-26, 3.5, -26);
+        domeLight.castShadow = true;
+        scene.add(domeLight);
+
+        // แหวนเหล็กปิดผนึกแรงดันขอบกระจกโดม
+        const domeRingGeo = new THREE.TorusGeometry(6.5, 0.15, 10, 40);
+        const domeRingMat = new THREE.MeshStandardMaterial({ color: '#13212f', metalness: 0.8, roughness: 0.2 });
+        const domeRing = new THREE.Mesh(domeRingGeo, domeRingMat);
+        domeRing.rotation.x = Math.PI / 2;
+        domeRing.position.set(-26, 0.18, -26);
+        scene.add(domeRing);
+
+        // =========================================================================
+        // ADVANCED 3D PROPS & FURNITURE (โมเดลเฟอร์นิเจอร์ละเอียดสูงพิเศษ)
+        // =========================================================================
+        
+        // ฟังก์ชันสร้างและตั้งเสาโครงตึกรับแรงดัน
+        function createHeavyColumn(x, z) {
+            const pillarGroup = new THREE.Group();
+            pillarGroup.position.set(x, 4.125, z);
+
+            const pillarBody = new THREE.Mesh(
+                new THREE.CylinderGeometry(0.4, 0.55, 8.25, 16),
+                new THREE.MeshStandardMaterial({ color: '#1a2736', metalness: 0.6, roughness: 0.4 })
+            );
+            pillarBody.castShadow = true;
+            pillarBody.receiveShadow = true;
+            pillarGroup.add(pillarBody);
+
+            const bandGeo = new THREE.TorusGeometry(0.48, 0.08, 8, 24);
+            const bandMat = new THREE.MeshStandardMaterial({ color: '#00ffd5', emissive: '#0088aa', roughness: 0.1 });
+            const band = new THREE.Mesh(bandGeo, bandMat);
+            band.rotation.x = Math.PI / 2;
+            band.position.y = -1.5;
+            pillarGroup.add(band);
+
+            scene.add(pillarGroup);
+            collidableObjects.push(pillarBody);
+        }
+
+        // จัดวางสร้างเสาอาคารค้ำยันรับแรงดันน้ำ
+        createHeavyColumn(34, -34);
+        createHeavyColumn(-34, 34);
+        createHeavyColumn(34, 34);
+        createHeavyColumn(-34, -34);
+
+        // ฟังก์ชันสรรสร้างโต๊ะและชุดจัดวางคอมพิวเตอร์แบบละเอียดระดับพรีเมียม
+        function createDetailedWorkspace(x, z, empColor) {
+            const deskGroup = new THREE.Group();
+            deskGroup.position.set(x, 0.125, z);
+
+            // 1. แผ่นหน้าโต๊ะทำงานไม้ผิวลื่นสีขาวสะอาด
+            const topGeo = new THREE.BoxGeometry(2.8, 0.08, 1.7);
+            const topMat = new THREE.MeshStandardMaterial({ color: '#f8fafc', roughness: 0.4 });
+            const tableTop = new THREE.Mesh(topGeo, topMat);
+            tableTop.position.y = 0.75;
+            tableTop.castShadow = true;
+            tableTop.receiveShadow = true;
+            deskGroup.add(tableTop);
+
+            // 2. ขาโครงเหล็กกล้าใต้โต๊ะกันทรุด
+            const frameworkMat = new THREE.MeshStandardMaterial({ color: '#1e293b', metalness: 0.8, roughness: 0.3 });
+            const legL = new THREE.Mesh(new THREE.BoxGeometry(0.12, 0.75, 1.5), frameworkMat);
+            legL.position.set(-1.3, 0.375, 0);
+            legL.castShadow = true;
+            deskGroup.add(legL);
+
+            const legR = legL.clone();
+            legR.position.x = 1.3;
+            deskGroup.add(legR);
+
+            // 3. แผงกั้นโต๊ะสีกระจกเรืองแสงประจำแผนก
+            const shieldGeo = new THREE.BoxGeometry(2.8, 0.55, 0.05);
+            const shieldMat = new THREE.MeshStandardMaterial({ 
+                color: empColor, 
+                transparent: true, 
+                opacity: 0.65, 
+                roughness: 0.1, 
+                metalness: 0.3 
+            });
+            const shield = new THREE.Mesh(shieldGeo, shieldMat);
+            shield.position.set(0, 1.05, -0.8);
+            deskGroup.add(shield);
+
+            // 4. ขาและหน้าจอคอมพิวเตอร์มอนิเตอร์
+            const pole = new THREE.Mesh(new THREE.CylinderGeometry(0.04, 0.04, 0.3, 8), frameworkMat);
+            pole.position.set(0, 0.95, -0.45);
+            deskGroup.add(pole);
+
+            const display = new THREE.Mesh(
+                new THREE.BoxGeometry(1.2, 0.6, 0.04),
+                new THREE.MeshStandardMaterial({ color: '#090d16', roughness: 0.15, metalness: 0.8 })
+            );
+            display.position.set(0, 1.25, -0.45);
+            display.castShadow = true;
+            deskGroup.add(display);
+
+            // แป้นคีย์บอร์ดบนโต๊ะทำงาน
+            const kbd = new THREE.Mesh(
+                new THREE.BoxGeometry(0.65, 0.02, 0.22),
+                new THREE.MeshStandardMaterial({ color: '#0f172a', roughness: 0.6 })
+            );
+            kbd.position.set(0, 0.8, 0.1);
+            deskGroup.add(kbd);
+
+            // เมาส์สปอร์ตเรืองแสง
+            const mouse = new THREE.Mesh(
+                new THREE.BoxGeometry(0.06, 0.025, 0.1),
+                new THREE.MeshStandardMaterial({ color: empColor, roughness: 0.4 })
+            );
+            mouse.position.set(0.45, 0.8, 0.1);
+            deskGroup.add(mouse);
+
+            // 5. โคมไฟประดับโต๊ะส่องสว่างเรืองแสง
+            const lampBase = new THREE.Mesh(new THREE.CylinderGeometry(0.08, 0.08, 0.02, 8), frameworkMat);
+            lampBase.position.set(-1.0, 0.8, -0.4);
+            deskGroup.add(lampBase);
+
+            const lampArm = new THREE.Mesh(new THREE.CylinderGeometry(0.02, 0.02, 0.4, 8), frameworkMat);
+            lampArm.position.set(-1.0, 1.0, -0.4);
+            lampArm.rotation.z = -Math.PI / 8;
+            deskGroup.add(lampArm);
+
+            const lampHead = new THREE.Mesh(new THREE.CylinderGeometry(0.12, 0.08, 0.15, 12), frameworkMat);
+            lampHead.position.set(-0.85, 1.2, -0.4);
+            lampHead.rotation.z = -Math.PI / 4;
+            deskGroup.add(lampHead);
+
+            // หลอดไฟ LED นีออนประดับโต๊ะ
+            const lampLed = new THREE.Mesh(
+                new THREE.SphereGeometry(0.06, 8, 8),
+                new THREE.MeshBasicMaterial({ color: empColor })
+            );
+            lampLed.position.set(-0.82, 1.17, -0.4);
+            deskGroup.add(lampLed);
+
+            // 6. เก้าอี้ทำงานสปอร์ตพรีเมียม
+            const chairBase = new THREE.Mesh(new THREE.CylinderGeometry(0.14, 0.14, 0.45, 8), frameworkMat);
+            chairBase.position.set(0, 0.225, 0.45);
+            deskGroup.add(chairBase);
+
+            const seat = new THREE.Mesh(
+                new THREE.BoxGeometry(0.72, 0.08, 0.68),
+                new THREE.MeshStandardMaterial({ color: '#131923', roughness: 0.7 })
+            );
+            seat.position.set(0, 0.45, 0.45);
+            seat.castShadow = true;
+            deskGroup.add(seat);
+
+            const backrest = new THREE.Mesh(
+                new THREE.BoxGeometry(0.68, 0.75, 0.08),
+                new THREE.MeshStandardMaterial({ color: '#090d14', roughness: 0.8 })
+            );
+            backrest.position.set(0, 0.85, 0.75);
+            backrest.castShadow = true;
+            deskGroup.add(backrest);
+
+            scene.add(deskGroup);
+            collidableObjects.push(tableTop); // เพิ่มแผ่นหน้าโต๊ะเป็นสิ่งกีดขวางกันเดินชนทะลุ
+        }
+
+        // จัดวางสร้างเฟอร์นิเจอร์โต๊ะทำงานแยกตามพิกัดของพนักงานทุกคน
+        employeesData.forEach(emp => {
+            createDetailedWorkspace(emp.x, emp.z - 0.6, emp.color);
+        });
+
+        // =========================================================================
+        // MAIN SERVER ROOM (ห้องประมวลผลตู้แร็คเซิร์ฟเวอร์หลักกลางห้องพร้อมไฟกะพริบ)
+        // =========================================================================
+        const serverRoomGroup = new THREE.Group();
+        serverRoomGroup.position.set(0, 0.125, 0);
+
+        const serverCoreGeo = new THREE.BoxGeometry(1.6, 2.8, 1.6);
+        const serverCoreMat = new THREE.MeshStandardMaterial({ color: '#121d28', roughness: 0.2, metalness: 0.85 });
+        const serverRack = new THREE.Mesh(serverCoreGeo, serverCoreMat);
+        serverRack.position.y = 1.4;
+        serverRack.castShadow = true;
+        serverRoomGroup.add(serverRack);
+
+        const trimTop = new THREE.Mesh(new THREE.BoxGeometry(1.7, 0.1, 1.7), serverCoreMat);
+        trimTop.position.y = 2.8;
+        serverRoomGroup.add(trimTop);
+
+        // ตู้เซิร์ฟเวอร์ย่อยขนาบข้าง (4 Server Racks ทั้งหมด)
+        function addSubServerRack(offsetX) {
+            const rackSub = new THREE.Mesh(new THREE.BoxGeometry(1.3, 2.6, 1.3), serverCoreMat);
+            rackSub.position.set(offsetX, 1.3, 0);
+            rackSub.castShadow = true;
+            serverRoomGroup.add(rackSub);
+            collidableObjects.push(rackSub);
+        }
+        addSubServerRack(-2.1);
+        addSubServerRack(2.1);
+
+        scene.add(serverRoomGroup);
+        collidableObjects.push(serverRack);
+
+        // สัญญาณไฟ LED แอนิเมชันกะพริบถี่ของตู้เซิร์ฟเวอร์
+        const ledLights = [];
+        const ledGeo = new THREE.BoxGeometry(0.05, 0.05, 0.05);
+        const greenLedMat = new THREE.MeshBasicMaterial({ color: '#00ffaa' });
+        const redLedMat = new THREE.MeshBasicMaterial({ color: '#ff4081' });
+
+        for (let row = 0; row < 6; row++) {
+            for (let col = 0; col < 2; col++) {
+                const led = new THREE.Mesh(ledGeo, col % 2 === 0 ? greenLedMat : redLedMat);
+                led.position.set(-0.6 + col * 1.2, 0.6 + row * 0.35, 0.81);
+                serverRoomGroup.add(led);
+                ledLights.push(led);
+            }
+        }
+
+        // =========================================================================
+        // STYLIZED HUMAN AVATARS (ตัวแทนคนแบบสามมิติครบถ้วน 20 คน)
+        // =========================================================================
+        function create3DAvatarEntity(colorHex, isPlayer = false, faceCanvas = null) {
+            const entity = new THREE.Group();
+            const bodyMat = new THREE.MeshStandardMaterial({ 
+                color: colorHex, 
+                roughness: 0.35, 
+                metalness: isPlayer ? 0.7 : 0.45 
+            });
+
+            // ส่วนลำตัว
+            const body = new THREE.Mesh(new THREE.CylinderGeometry(0.24, 0.16, 0.72, 16), bodyMat);
+            body.position.y = 0.55;
+            body.castShadow = true;
+            body.receiveShadow = true;
+            entity.add(body);
+
+            // ส่วนหัว
+            const headMat = isPlayer 
+                ? new THREE.MeshStandardMaterial({ color: '#00e5ff', emissive: '#004a5e', roughness: 0.1 })
+                : new THREE.MeshStandardMaterial({ color: '#ffd2a1', roughness: 0.5 });
+            const head = new THREE.Mesh(new THREE.SphereGeometry(0.18, 16, 16), headMat);
+            head.position.y = 1.02;
+            head.castShadow = true;
+            entity.add(head);
+
+            // แปะ "หน้าพนักงาน" พิกเซลไว้ด้านหน้าหัว (เฉพาะพนักงาน ไม่ใช้กับผู้เล่น)
+            if (faceCanvas) {
+                const faceTex = new THREE.CanvasTexture(faceCanvas);
+                faceTex.magFilter = THREE.NearestFilter;
+                faceTex.minFilter = THREE.NearestFilter;
+                const faceMat = new THREE.MeshBasicMaterial({ map: faceTex, transparent: true });
+                const facePlane = new THREE.Mesh(new THREE.PlaneGeometry(0.24, 0.24), faceMat);
+                facePlane.position.set(0, 1.02, 0.175);
+                entity.add(facePlane);
+            }
+
+            // ขาคู่ขนานขยับมั่นคง
+            const legsMat = new THREE.MeshStandardMaterial({ color: '#0f1722', roughness: 0.8 });
+            const legLeft = new THREE.Mesh(new THREE.BoxGeometry(0.08, 0.48, 0.08), legsMat);
+            legLeft.position.set(-0.08, 0.24, 0);
+            legLeft.castShadow = true;
+            entity.add(legLeft);
+
+            const legRight = legLeft.clone();
+            legRight.position.x = 0.08;
+            entity.add(legRight);
+
+            // แขนคู่
+            const armLeft = new THREE.Mesh(new THREE.BoxGeometry(0.07, 0.38, 0.07), bodyMat);
+            armLeft.position.set(-0.28, 0.56, 0.06);
+            armLeft.rotation.x = Math.PI / 5;
+            armLeft.castShadow = true;
+            entity.add(armLeft);
+
+            const armRight = armLeft.clone();
+            armRight.position.x = 0.28;
+            entity.add(armRight);
+
+            return entity;
+        }
+
+        // นำพนักงานจำลองทุกคนติดตั้งประจำพิกัดส่วนตัว
+        employeesData.forEach(emp => {
+            const avatar = create3DAvatarEntity(emp.color, false, getEmployeeFaceCanvas(emp));
+            avatar.position.set(emp.x, 0.125, emp.z);
+            scene.add(avatar);
+            emp.mesh = avatar;
+        });
+
+        // สร้างและปรับตำแหน่งเริ่มต้นของผู้เล่นหลัก (นีออนสีฟ้า)
+        const player = {
+            mesh: create3DAvatarEntity('#00ffd5', true),
+            radius: 0.45
+        };
+        player.mesh.position.set(0, 0.125, 30); // พิกัดต้อนรับหน้าประตูกลางออฟฟิศ
+        scene.add(player.mesh);
+
+        // =========================================================================
+        // HUD LABELS & INTERACTIVE HOLOGRAM SYSTEMS
+        // =========================================================================
+        function updateAllUIOverlays() {
+            // ป้ายบอกโซนหลักในออฟฟิศ
+            labelsData.forEach(data => {
+                const element = document.getElementById(data.id);
+                if (!element) return;
+                
+                const tempV = data.pos.clone().project(camera);
+                // ป้องกันปัญหาค้างและตำแหน่งทะลุขอบนอกระยะ Z > 1
+                if (tempV.z > 1) { 
+                    element.style.display = 'none'; 
+                    return; 
+                }
+                
+                element.style.display = 'block';
+                element.style.left = `${(tempV.x * 0.5 + 0.5) * container.clientWidth}px`;
+                element.style.top = `${(tempV.y * -0.5 + 0.5) * container.clientHeight}px`;
+            });
+
+            // ป้ายโฮโลแกรมเหนือศีรษะพนักงานทุกคน
+            employeesData.forEach(emp => {
+                const element = document.getElementById(`web-${emp.id}`);
+                if (!element) return;
+
+                const targetPos = new THREE.Vector3(emp.x, 2.35, emp.z);
+                const tempV = targetPos.project(camera);
+                
+                // ป้องกันปัญหาจอโหลดเกินพิกัดเมื่อพนักงานไม่อยู่ในสายตา
+                if (tempV.z > 1) { 
+                    element.style.display = 'none'; 
+                    return; 
+                }
+
+                element.style.display = 'block';
+                element.style.left = `${(tempV.x * 0.5 + 0.5) * container.clientWidth}px`;
+                element.style.top = `${(tempV.y * -0.5 + 0.5) * container.clientHeight}px`;
+            });
+
+            // ป้ายสถานะอารมณ์เหนือศีรษะพนักงาน แสดงเฉพาะคนที่ผู้เล่นยืนอยู่ใกล้ๆ
+            employeesData.forEach(emp => {
+                const moodEl = document.getElementById(`mood-${emp.id}`);
+                if (!moodEl) return;
+
+                if (emp !== targetedEmployee) {
+                    moodEl.style.display = 'none';
+                    return;
+                }
+
+                const targetPos = new THREE.Vector3(emp.x, 1.55, emp.z);
+                const tempV = targetPos.project(camera);
+                if (tempV.z > 1) {
+                    moodEl.style.display = 'none';
+                    return;
+                }
+
+                moodEl.style.display = 'block';
+                moodEl.style.left = `${(tempV.x * 0.5 + 0.5) * container.clientWidth}px`;
+                moodEl.style.top = `${(tempV.y * -0.5 + 0.5) * container.clientHeight}px`;
+            });
+        }
+
+        // =========================================================================
+        // PLAYER INTERACTS, PHYSICS & COLLISION SYSTEM
+        // =========================================================================
+        const movementSpeed = 0.22;
+        const activeKeys = {
+            ArrowUp: false, ArrowDown: false, ArrowLeft: false, ArrowRight: false,
+            w: false, a: false, s: false, d: false,
+            W: false, A: false, S: false, D: false
+        };
+        let targetedEmployee = null;
+
+        // คอยดักรับปุ่มควบคุมทิศทาง
+        window.addEventListener('keydown', (e) => {
+            if (e.key in activeKeys) activeKeys[e.key] = true;
+        });
+
+        window.addEventListener('keyup', (e) => {
+            if (e.key in activeKeys) activeKeys[e.key] = false;
+        });
+
+        // ฟังก์ชันกลางสำหรับดึงสรุปรายงานผลงาน (ใช้ร่วมกันทั้งปุ่ม [ E ] และปุ่มเช็คงานบนหน้าจอ)
+        function performTaskCheck() {
+            if (!targetedEmployee) return;
+            detailsBox.innerHTML = `
+                <div style="display:flex; gap:12px; align-items:flex-start; margin-bottom:10px;">
+                    <img class="face-avatar-lg" src="${getEmployeeFaceDataURL(targetedEmployee)}" alt="${targetedEmployee.name}">
+                    <div>
+                        <div style="font-weight:900; font-size:13px; color:#fff;">${targetedEmployee.name}</div>
+                        <div style="font-size:11px; color: var(--text-sub);">${targetedEmployee.dept}</div>
+                    </div>
+                </div>
+                ${targetedEmployee.task}<br><br>สถานะตอนนี้: <b>${targetedEmployee.mood} ${targetedEmployee.moodLabel}</b>`;
+            detailsBox.style.borderColor = varColorSelector(targetedEmployee.dept);
+
+            const webScreen = document.getElementById(`web-${targetedEmployee.id}`);
+            if (webScreen) {
+                webScreen.style.borderColor = targetedEmployee.color;
+                webScreen.style.boxShadow = `0 8px 25px ${targetedEmployee.color}`;
+            }
+        }
+
+        // ตรวจสอบการกดเรียกดูไฟล์สรุปรายงานผลงานผ่านปุ่ม [ E ]
+        window.addEventListener('keydown', (e) => {
+            if ((e.key === 'e' || e.key === 'E') && targetedEmployee) {
+                performTaskCheck();
+                e.preventDefault();
+            }
+        });
+
+        // ปุ่มเช็คงานบนหน้าจอ สำหรับผู้เล่นที่ใช้มือถือ/แตะหน้าจอแทนคีย์บอร์ด
+        document.getElementById('check-task-btn').addEventListener('click', performTaskCheck);
+
+        // =========================================================================
+        // JUMP PHYSICS (ระบบกระโดดของตัวละคร ควบคุมด้วยปุ่ม Spacebar)
+        // =========================================================================
+        const groundLevelY = 0.125; // ระดับพื้นเริ่มต้นของตัวละคร
+        const jumpStrength = 0.28;  // แรงกระโดดเริ่มต้น
+        const gravityForce = -0.016; // แรงโน้มถ่วงดึงตัวละครกลับสู่พื้น
+        let jumpVelocity = 0;
+        let isJumping = false;
+
+        window.addEventListener('keydown', (e) => {
+            if ((e.key === ' ' || e.code === 'Space')) {
+                e.preventDefault(); // กันไม่ให้หน้าเว็บเลื่อนสกอลล์เวลากดเว้นวรรค
+                if (!isJumping) {
+                    isJumping = true;
+                    jumpVelocity = jumpStrength;
+                }
+            }
+        });
+
+        // อัปเดตตำแหน่งแนวตั้งของตัวละครทุกเฟรมตามแรงโน้มถ่วงจำลอง
+        function runJumpPhysics() {
+            if (!isJumping) return;
+
+            jumpVelocity += gravityForce;
+            player.mesh.position.y += jumpVelocity;
+
+            if (player.mesh.position.y <= groundLevelY) {
+                player.mesh.position.y = groundLevelY;
+                jumpVelocity = 0;
+                isJumping = false;
+            }
+        }
+
+        function varColorSelector(dept) {
+            switch(dept) {
+                case 'Executive': return 'var(--neon-blue)';
+                case 'Dev': return 'var(--neon-magenta)';
+                case 'Marketing': return 'var(--danger-red)';
+                case 'AI Lab': return 'var(--neon-green)';
+                case 'HR': return 'var(--amazon-orange)';
+                default: return 'var(--amazon-border)';
+            }
+        }
+
+        // ปรับโฟกัสกล้องมายังพนักงานที่คลิกจากรายชื่อด้านซ้าย
+        window.focusCameraOnEmployee = function(empId) {
+            const emp = employeesData.find(e => e.id === empId);
+            if (emp) {
+                player.mesh.position.set(emp.x, 0.125, emp.z + 1.65);
+                controls.target.set(emp.x, 1.2, emp.z);
+                camera.position.set(emp.x, 9, emp.z + 11.5);
+                controls.update();
+
+                targetedEmployee = emp;
+                detailsBox.innerHTML = `
+                    <div style="display:flex; gap:12px; align-items:flex-start; margin-bottom:10px;">
+                        <img class="face-avatar-lg" src="${getEmployeeFaceDataURL(emp)}" alt="${emp.name}">
+                        <div>
+                            <div style="font-weight:900; font-size:13px; color:#fff;">${emp.name}</div>
+                            <div style="font-size:11px; color: var(--text-sub);">${emp.dept}</div>
+                        </div>
+                    </div>
+                    ${emp.task}<br><br>สถานะตอนนี้: <b>${emp.mood} ${emp.moodLabel}</b>`;
+                detailsBox.style.borderColor = varColorSelector(emp.dept);
+            }
+        };
+
+        // รีเซ็ตตำแหน่งเริ่มต้น
+        document.getElementById('reset-pos-btn').addEventListener('click', () => {
+            player.mesh.position.set(0, 0.125, 30);
+            controls.target.set(0, 0, 0);
+            camera.position.set(0, 32, 50);
+            controls.update();
+            isJumping = false;
+            jumpVelocity = 0;
+        });
+
+        // ระบบวิเคราะห์ชนขวางผนังห้อง
+        function checkSpatialCollision(nextX, nextZ) {
+            const playerBox = new THREE.Box3().setFromCenterAndSize(
+                new THREE.Vector3(nextX, 0.6, nextZ),
+                new THREE.Vector3(player.radius * 2, 1.25, player.radius * 2)
+            );
+            
+            for (let obj of collidableObjects) {
+                const objBox = new THREE.Box3().setFromObject(obj);
+                if (playerBox.intersectsBox(objBox)) {
+                    return true;
+                }
+            }
+            if (nextX < -40 || nextX > 40 || nextZ < -40 || nextZ > 40) {
+                return true;
+            }
+            return false;
+        }
+
+        // ขับเคลื่อนตัวละคร
+        function runMovementProcess() {
+            let nextX = player.mesh.position.x;
+            let nextZ = player.mesh.position.z;
+
+            if (activeKeys.ArrowUp || activeKeys.w || activeKeys.W) nextZ -= movementSpeed;
+            if (activeKeys.ArrowDown || activeKeys.s || activeKeys.S) nextZ += movementSpeed;
+            if (activeKeys.ArrowLeft || activeKeys.a || activeKeys.A) nextX -= movementSpeed;
+            if (activeKeys.ArrowRight || activeKeys.d || activeKeys.D) nextX += movementSpeed;
+
+            if (!checkSpatialCollision(nextX, player.mesh.position.z)) {
+                player.mesh.position.x = nextX;
+            }
+            if (!checkSpatialCollision(player.mesh.position.x, nextZ)) {
+                player.mesh.position.z = nextZ;
+            }
+
+            targetedEmployee = null;
+            const toast = document.getElementById('toast');
+            const checkTaskBtn = document.getElementById('check-task-btn');
+            toast.style.display = 'none';
+            checkTaskBtn.disabled = true;
+            checkTaskBtn.classList.remove('task-ready');
+
+            for (let emp of employeesData) {
+                const distance = player.mesh.position.distanceTo(emp.mesh.position);
+                if (distance < 2.0) {
+                    targetedEmployee = emp;
+                    toast.style.display = 'block';
+                    toast.innerHTML = `💼 พบนายตรวจการอยู่ใกล้ <b>${emp.name}</b> (${emp.mood} ${emp.moodLabel})! กดปุ่ม <b>[ E ]</b> หรือแตะ <b>"เช็คงาน"</b> เพื่อวิเคราะห์ล็อกการทำงาน`;
+                    checkTaskBtn.disabled = false;
+                    checkTaskBtn.classList.add('task-ready');
+                    break;
+                }
+            }
+        }
+
+        // =========================================================================
+        // REAL-TIME SYSTEM TELEMETRY (จำลองรายงานสัญญาณเซิร์ฟเวอร์เรียลไทม์)
+        // =========================================================================
+        const mLatency = document.getElementById('m-latency');
+        const mCpu = document.getElementById('m-cpu');
+        const mPsi = document.getElementById('m-psi');
+
+        function updateLiveTelemetryData() {
+            const randLatency = (Math.random() * 0.8 + 0.6).toFixed(1);
+            mLatency.innerText = `${randLatency} ms`;
+
+            const randCpu = Math.floor(Math.random() * 15 + 25);
+            mCpu.innerText = `${randCpu}% Load`;
+
+            const randPsi = (1450 + Math.floor(Math.random() * 30 - 15)).toLocaleString();
+            mPsi.innerText = `${randPsi} Psi`;
+
+            ledLights.forEach(led => {
+                if (Math.random() > 0.7) {
+                    led.visible = !led.visible;
+                }
+            });
+        }
+        setInterval(updateLiveTelemetryData, 1000);
+
+        // =========================================================================
+        // COMPANY STOCK TICKER (จำลองมูลค่าหุ้นบริษัท AMZN แบบเรียลไทม์)
+        // =========================================================================
+        const mStock = document.getElementById('m-stock');
+        const mStockChange = document.getElementById('m-stock-change');
+        const stockOpenPrice = 228.50;
+        let currentStockPrice = stockOpenPrice;
+
+        function updateStockTicker() {
+            const delta = (Math.random() - 0.47) * 1.4; // สุ่มความผันผวนของราคา เอนไปทางขาขึ้นเล็กน้อย
+            currentStockPrice = Math.max(1, currentStockPrice + delta);
+
+            const changeAmount = currentStockPrice - stockOpenPrice;
+            const changePercent = (changeAmount / stockOpenPrice) * 100;
+            const sign = changeAmount >= 0 ? '+' : '';
+
+            mStock.innerText = `$${currentStockPrice.toFixed(2)}`;
+            mStockChange.innerText = `${sign}${changeAmount.toFixed(2)} (${sign}${changePercent.toFixed(2)}%)`;
+            mStockChange.style.color = changeAmount >= 0 ? 'var(--neon-green)' : 'var(--danger-red)';
+        }
+        updateStockTicker();
+        setInterval(updateStockTicker, 1500);
+
+        // =========================================================================
+        // MAIN GAME RENDER LOOP
+        // =========================================================================
+        function gameMainLoop() {
+            requestAnimationFrame(gameMainLoop);
+            
+            runMovementProcess();
+            runJumpPhysics();
+            updateAllUIOverlays();
+            controls.update();
+            renderer.render(scene, camera);
+        }
+
+        // เพิ่มการตรวจสอบความกว้างความสูง และการจำกัดสเกล pixelRatio ให้เหมาะสมกับขนาดหน้าจอ
+        function handleViewportResize() {
+            if (!container || !camera || !renderer) return;
+            const width = container.clientWidth;
+            const height = container.clientHeight;
+            if (width === 0 || height === 0) return;
+            camera.aspect = width / height;
+            camera.updateProjectionMatrix();
+            renderer.setSize(width * PIXEL_SCALE, height * PIXEL_SCALE, false);
+            renderer.setPixelRatio(1);
+        }
+        window.addEventListener('resize', handleViewportResize);
+
+        // คอยตรวจจับเมื่อขนาดพื้นที่เกมเปลี่ยน (เช่น ตอนกดปุ่มพับ/ขยายแผงด้านข้าง) แล้วปรับกล้อง/เรนเดอร์ให้ทันที
+        if (window.ResizeObserver) {
+            const gameScreenResizeObserver = new ResizeObserver(() => handleViewportResize());
+            gameScreenResizeObserver.observe(container);
+        }
+
+        // =========================================================================
+        // ปุ่มพับ/ขยายแผงด้านซ้ายและขวา
+        // =========================================================================
+        const sidebarLeftEl = document.querySelector('.sidebar-left');
+        const sidebarRightEl = document.querySelector('.sidebar-right');
+        const toggleLeftBtn = document.getElementById('toggle-left-btn');
+        const toggleRightBtn = document.getElementById('toggle-right-btn');
+
+        toggleLeftBtn.addEventListener('click', () => {
+            const collapsed = sidebarLeftEl.classList.toggle('collapsed');
+            toggleLeftBtn.classList.toggle('is-collapsed', collapsed);
+            toggleLeftBtn.textContent = collapsed ? '›' : '‹';
+            toggleLeftBtn.title = collapsed ? 'ขยายแผงด้านซ้าย' : 'พับแผงด้านซ้าย';
+        });
+
+        toggleRightBtn.addEventListener('click', () => {
+            const collapsed = sidebarRightEl.classList.toggle('collapsed');
+            toggleRightBtn.classList.toggle('is-collapsed', collapsed);
+            toggleRightBtn.textContent = collapsed ? '‹' : '›';
+            toggleRightBtn.title = collapsed ? 'ขยายแผงด้านขวา' : 'พับแผงด้านขวา';
+        });
+
+        // แปลงทุกวัตถุในฉากให้เป็นสไตล์การ์ตูนพิกเซล 3 มิติ (cel-shading + เส้นขอบดำ) หลังสร้างฉากครบแล้ว
+        toonifyObject(scene);
+
+        // เริ่มสตาร์ตการรันเกม
+        gameMainLoop();
+    </script>
+</body>
+</html>
